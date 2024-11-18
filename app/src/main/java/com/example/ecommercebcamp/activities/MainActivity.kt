@@ -1,14 +1,15 @@
-package com.example.ecommercebcamp
+package com.example.ecommercebcamp.activities
 
-import android.database.DatabaseUtils
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.collection.intFloatMapOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
+import com.example.ecommercebcamp.R
 import com.example.ecommercebcamp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
