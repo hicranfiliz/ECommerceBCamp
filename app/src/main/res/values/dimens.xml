@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="icon_size">35dp</dimen>
+    <dimen name="icon_padding">8dp</dimen>
+    <dimen name="text_size">12sp</dimen>
+    <dimen name="badge_margin">2dp</dimen>
+    <dimen name="horizontal_padding">10dp</dimen>
+</resources>
