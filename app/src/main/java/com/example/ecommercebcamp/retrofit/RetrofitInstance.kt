@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 class RetrofitInstance {
 
     companion object{
-        val BASE_URL = ""
+        val BASE_URL = "https://run.mocky.io/v3/2d9740dd-22e4-4a55-8a53-fa82e47de25d/"
 
         val interceptor = HttpLoggingInterceptor().apply {
             this.level = HttpLoggingInterceptor.Level.BODY
