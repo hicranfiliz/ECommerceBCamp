@@ -1,14 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.DetailFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:actionBarSize"
+        android:backgroundTint="@color/primary">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:title="Details"
+                app:layout_collapseMode="pin"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:padding="@dimen/_10sdp"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imgProduct"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_250sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:scaleType="centerCrop"/>
+
+
+            <TextView
+                android:id="@+id/tvInstructions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="WD 2TB Elements Portable External Hard Drive - USB 3.0 "
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:fontFamily="@font/font"
+                android:textSize="@dimen/_15sdp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/_5sdp">
+
+                <ImageView
+                    android:id="@+id/starIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/star__1_"/>
+
+                <TextView
+                    android:id="@+id/ratingText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4.5"
+                    android:textColor="@color/black"
+                    android:layout_marginStart="5dp" />
+
+                <TextView
+                    android:id="@+id/reviewCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(203)"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/gray" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/categoryText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Category: Electronics"
+                android:textStyle="bold"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:textColor="@color/black" />
+
+            <!-- Description -->
+            <TextView
+                android:id="@+id/descriptionText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Description: USB 3.0 and USB 2.0 Compatibility"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:textColor="@color/black" />
+
+            <!-- Price -->
+            <TextView
+                android:id="@+id/priceText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="$499.00"
+                android:textStyle="bold"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAddToFav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/heart"
+        android:backgroundTint="@color/primary"
+        android:tint="@color/white"
+        app:layout_anchor="@id/appbar"
+        app:layout_anchorGravity="bottom|end"
+        android:layout_marginEnd="@dimen/_10sdp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:paddingHorizontal="16dp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:paddingVertical="8dp"
+        android:backgroundTint="@color/black"
+        android:text="@string/add_to_cart"
+        android:textSize="@dimen/_10sdp"
+        android:fontFamily="@font/font"
+        app:cornerRadius="@dimen/_10sdp"
+        android:textColor="@color/white"
+        android:drawableStart="@drawable/cart"
+        android:drawablePadding="6dp"
+        android:gravity="center"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        app:icon="@drawable/cart"
+        app:iconSize="@dimen/_20sdp"
+        app:iconGravity="textStart"
+        app:iconPadding="6dp" />
+
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:layout_anchor="@id/appbar"
+        app:layout_anchorGravity="bottom"
+        android:visibility="gone"/>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
