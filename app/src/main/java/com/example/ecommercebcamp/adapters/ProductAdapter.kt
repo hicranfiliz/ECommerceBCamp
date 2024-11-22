@@ -9,9 +9,11 @@ import com.example.ecommercebcamp.viewHolders.ProductViewHolder
 
 class ProductAdapter() : RecyclerView.Adapter<ProductViewHolder>() {
 
-    private var productList = ArrayList<ProductsModelItem>()
-    fun setProducts(productList : List<ProductsModelItem?>){
-        this.productList = productList as ArrayList<ProductsModelItem>
+    private var productList = mutableListOf<ProductsModelItem>()
+
+    fun setProducts(productList : List<ProductsModelItem>){
+        this.productList.clear()
+        this.productList.addAll(productList)
         notifyDataSetChanged()
     }
 

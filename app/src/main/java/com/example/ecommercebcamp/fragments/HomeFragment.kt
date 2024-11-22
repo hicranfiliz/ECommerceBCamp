@@ -21,7 +21,6 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var homeViewModel: HomeViewModel
-    private lateinit var products: ProductsModelItem
 
     private lateinit var productCategoryAdapter: ProductCategoryAdapter
     private lateinit var productAdapter: ProductAdapter
@@ -29,7 +28,9 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-        productCategoryAdapter = ProductCategoryAdapter()
+        productCategoryAdapter = ProductCategoryAdapter{ category ->
+            onCategorySelected(category)
+        }
         productAdapter = ProductAdapter()
     }
 
@@ -49,6 +50,7 @@ class HomeFragment : Fragment() {
         showProductItemsRV()
 
         homeViewModel.fetchProducts()
+
         observeProductCategories()
         observeProduct()
     }
@@ -56,7 +58,7 @@ class HomeFragment : Fragment() {
     private fun showCategoryItemsRV() {
         binding.rvCategories.apply {
             layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-            adapter = productAdapter
+            adapter = productCategoryAdapter
         }
     }
 
@@ -68,19 +70,31 @@ class HomeFragment : Fragment() {
     }
 
     private fun observeProductCategories() {
-        homeViewModel.products.observe(viewLifecycleOwner, Observer { product ->
-            if (product != null) {
-                productAdapter.setProducts(productList = product as ArrayList<ProductsModelItem>)
+        homeViewModel.categories.observe(viewLifecycleOwner, Observer { categories ->
+            if (categories != null) {
+                productCategoryAdapter.setCategories(categories)
             }
         })
     }
 
     private fun observeProduct() {
-        homeViewModel.products.observe(viewLifecycleOwner, Observer { product ->
-            if (product != null) {
-                productAdapter.setProducts(productList = product as ArrayList<ProductsModelItem>)
+        homeViewModel.productsByCategory.observe(viewLifecycleOwner) { groupedProducts ->
+            val firstCategory = groupedProducts.keys.firstOrNull()
+            firstCategory?.let {
+                productAdapter.setProducts(groupedProducts[it] ?: emptyList())
             }
-        })
+        }
+    }
+
+    private fun onCategorySelected(category: String) {
+        homeViewModel.productsByCategory.value?.let { groupedProducts ->
+            productAdapter.setProducts(groupedProducts[category] ?: emptyList())
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

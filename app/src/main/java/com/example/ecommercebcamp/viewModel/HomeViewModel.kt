@@ -14,15 +14,22 @@ class HomeViewModel() : ViewModel() {
 
     private val productService = RetrofitInstance.getRetrofitInstance().create(ProductService::class.java)
 
-    private val _products = MutableLiveData<List<ProductsModelItem?>>()
-    val products: LiveData<List<ProductsModelItem?>> get() = _products
+    private val _categories = MutableLiveData<List<String>>()
+    val categories: LiveData<List<String>> get() = _categories
+
+    private val _productsByCategory = MutableLiveData<Map<String, List<ProductsModelItem>>>()
+    val productsByCategory: LiveData<Map<String, List<ProductsModelItem>>> get() = _productsByCategory
 
     fun fetchProducts() {
         viewModelScope.launch {
             try {
                 val response = productService.getProducts()
                 if (response.isSuccessful) {
-                    _products.value = response.body()
+                    val productList = response.body() ?: emptyList()
+                    _categories.value = productList.map {
+                        it.category
+                    }.distinct()
+                    _productsByCategory.value = productList.groupBy { it.category }
                 } else {
                     Log.e("HomeViewModel", "Error: ${response.errorBody()?.string()}")
                 }
