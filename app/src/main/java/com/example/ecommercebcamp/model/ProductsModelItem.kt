@@ -1,5 +1,9 @@
 package com.example.ecommercebcamp.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class ProductsModelItem(
     val category: String,
     val description: String,
@@ -8,4 +12,4 @@ data class ProductsModelItem(
     val price: Double,
     val rating: Rating,
     val title: String
-)
+): Parcelable

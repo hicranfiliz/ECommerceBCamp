@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/_10sdp"
+    android:background="@color/primary"
     tools:context=".fragments.HomeFragment">
 
     <androidx.core.widget.NestedScrollView
@@ -21,10 +22,10 @@
                 android:id="@+id/tvCategories"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_20sdp"
                 android:text="@string/categories"
-                android:textSize="@dimen/_20sdp"
+                android:textSize="@dimen/_16sdp"
                 android:textStyle="bold"
+                android:fontFamily="@font/font"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,10 +42,11 @@
                 android:id="@+id/tvProductss"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:text="@string/products"
-                android:textSize="@dimen/_20sdp"
+                android:textSize="@dimen/_16sdp"
                 android:textStyle="bold"
+                android:fontFamily="@font/font"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rvCategories" />
 

@@ -8,6 +8,7 @@ import com.example.ecommercebcamp.model.ProductsModelItem
 import com.example.ecommercebcamp.viewHolders.ProductViewHolder
 
 class ProductAdapter() : RecyclerView.Adapter<ProductViewHolder>() {
+    lateinit var onProductClick: ((ProductsModelItem) -> Unit)
 
     private var productList = mutableListOf<ProductsModelItem>()
 
@@ -19,7 +20,7 @@ class ProductAdapter() : RecyclerView.Adapter<ProductViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         val binding = ItemLayoutProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ProductViewHolder(binding)
+        return ProductViewHolder(binding, onProductClick)
     }
 
     override fun getItemCount(): Int {

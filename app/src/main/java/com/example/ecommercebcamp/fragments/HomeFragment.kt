@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.ecommercebcamp.R
 import com.example.ecommercebcamp.adapters.ProductAdapter
 import com.example.ecommercebcamp.adapters.ProductCategoryAdapter
 import com.example.ecommercebcamp.databinding.FragmentHomeBinding
@@ -24,6 +26,10 @@ class HomeFragment : Fragment() {
 
     private lateinit var productCategoryAdapter: ProductCategoryAdapter
     private lateinit var productAdapter: ProductAdapter
+
+    companion object {
+        const val PRODUCT_ID = "com.example.easyfooddemo.fragments.id"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +59,16 @@ class HomeFragment : Fragment() {
 
         observeProductCategories()
         observeProduct()
+        onProductClick()
+    }
+
+    private fun onProductClick() {
+        productAdapter.onProductClick = {product ->
+            val bundle = Bundle().apply {
+                putParcelable(PRODUCT_ID, product)
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+        }
     }
 
     private fun showCategoryItemsRV() {
