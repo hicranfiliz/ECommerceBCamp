@@ -28,8 +28,9 @@ class HomeViewModel() : ViewModel() {
                     val productList = response.body() ?: emptyList()
                     _categories.value = productList.map {
                         it.category
-                    }.distinct()
-                    _productsByCategory.value = productList.groupBy { it.category }
+                    }.
+                    filterNotNull().distinct()
+                    _productsByCategory.value = productList.groupBy { it.category ?: "" }
                 } else {
                     Log.e("HomeViewModel", "Error: ${response.errorBody()?.string()}")
                 }
