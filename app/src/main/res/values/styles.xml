@@ -7,8 +7,16 @@
     </style>
 
     <style name="TextStyle">
-        <item name="android:textSize">@dimen/_12sdp</item>
+        <item name="android:textSize">@dimen/_14sdp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/font</item>
         <item name="android:textColor">@color/black</item>
     </style>
+
+    <style name="CustomRatingBar" parent="Widget.AppCompat.RatingBar">
+        <item name="android:progressDrawable">@drawable/custom_star</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:maxHeight">48dp</item>
+    </style>
+
 </resources>
