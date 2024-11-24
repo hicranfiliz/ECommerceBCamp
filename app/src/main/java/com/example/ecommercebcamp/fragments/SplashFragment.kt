@@ -1,5 +1,6 @@
 package com.example.ecommercebcamp.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Looper
 import androidx.fragment.app.Fragment
@@ -22,8 +23,15 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val sharedPrefs = requireContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE)
+        val userName = sharedPrefs.getString("userName", null)
+
         Handler(Looper.getMainLooper()).postDelayed({
-            findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+            if (userName == null){
+                findNavController().navigate(R.id.action_splashFragment_to_userInfoFragment)
+            }else{
+                findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+            }
         }, 3000)
     }
 

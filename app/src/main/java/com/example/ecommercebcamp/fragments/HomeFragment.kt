@@ -1,6 +1,7 @@
 package com.example.ecommercebcamp.fragments
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -55,6 +56,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setUpToolbarInfo()
         setUpToolbarFavAction()
         setUpToolbarSearchAction()
         showCategoryItemsRV()
@@ -67,6 +69,22 @@ class HomeFragment : Fragment() {
         observeProduct()
         observeFilteredProducts()
         onProductClick()
+    }
+
+    private fun setUpToolbarInfo() {
+        val sharedPrefs = requireContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE)
+        val userName = sharedPrefs.getString("userName", "Hicran")
+        val userGender = sharedPrefs.getString("userGender", "other")
+
+        binding.customToolbarr.tvUserName.text = "Hi, $userName"
+
+        val genderIcon = when (userGender){
+            "male" -> R.drawable.man_s
+            "female" -> R.drawable.woman_s
+            else -> R.drawable.user_s
+        }
+
+        binding.customToolbarr.imgUser.setImageResource(genderIcon)
     }
 
     private fun setUpToolbarFavAction() {
