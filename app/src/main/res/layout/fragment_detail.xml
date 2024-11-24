@@ -129,6 +129,7 @@
                 android:id="@+id/rvSimilarProducts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_10sdp"/>
 
 
