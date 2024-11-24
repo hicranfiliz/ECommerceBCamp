@@ -20,12 +20,23 @@ class HomeViewModel() : ViewModel() {
     private val _productsByCategory = MutableLiveData<Map<String, List<ProductsModelItem>>>()
     val productsByCategory: LiveData<Map<String, List<ProductsModelItem>>> get() = _productsByCategory
 
+    private val _allProducts = MutableLiveData<List<ProductsModelItem>>()
+    val allProducts: LiveData<List<ProductsModelItem>> get() = _allProducts
+
+    private val _filteredProducts = MutableLiveData<List<ProductsModelItem>>()
+    val filteredProducts: LiveData<List<ProductsModelItem>> get() = _filteredProducts
+
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
     fun fetchProducts() {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 val response = productService.getProducts()
                 if (response.isSuccessful) {
                     val productList = response.body() ?: emptyList()
+                    _allProducts.value = productList
                     _categories.value = productList.map {
                         it.category
                     }.
@@ -36,7 +47,17 @@ class HomeViewModel() : ViewModel() {
                 }
             } catch (e: Exception) {
                 Log.e("HomeViewModel", "Exception: ${e.message}")
+            } finally {
+                _isLoading.value = false
             }
         }
+    }
+
+    fun searchProducts(query: String) {
+        val filteredList = _allProducts.value?.filter {
+            it.title?.contains(query, ignoreCase = true) == true ||
+                    it.category?.contains(query, ignoreCase = true) == true
+        } ?: emptyList()
+        _filteredProducts.value = filteredList
     }
 }

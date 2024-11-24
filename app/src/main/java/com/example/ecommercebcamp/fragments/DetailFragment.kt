@@ -1,6 +1,7 @@
 package com.example.ecommercebcamp.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,14 +9,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.ecommercebcamp.R
+import com.example.ecommercebcamp.adapters.SimilarProductAdapter
 import com.example.ecommercebcamp.databinding.FragmentDetailBinding
 import com.example.ecommercebcamp.db.ProductDatabase
 import com.example.ecommercebcamp.db.ProductRepository
 import com.example.ecommercebcamp.model.ProductsModelItem
 import com.example.ecommercebcamp.viewModel.DetailViewModel
 import com.example.ecommercebcamp.viewModel.DetailViewModelFactory
+import com.example.ecommercebcamp.viewModel.HomeViewModel
 
 class DetailFragment : Fragment() {
 
@@ -23,6 +27,7 @@ class DetailFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var detailViewModel: DetailViewModel
+    private lateinit var similarProductAdapter: SimilarProductAdapter
 
     private var product: ProductsModelItem? = null
 
@@ -33,6 +38,7 @@ class DetailFragment : Fragment() {
         val repository = ProductRepository(dao)
         val factory = DetailViewModelFactory(repository)
         detailViewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
+        similarProductAdapter = SimilarProductAdapter()
     }
 
     override fun onCreateView(
@@ -46,14 +52,32 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupToolbarActions()
+
         product = arguments?.getParcelable<ProductsModelItem>(HomeFragment.PRODUCT_ID)
+        val similarProducts = arguments?.getParcelableArrayList<ProductsModelItem>(HomeFragment.SIMILAR_PRODUCTS)
+
+        similarProducts?.let {
+            similarProductAdapter.setProducts(it)
+        }
 
         product?.let {
             bindProductDetails(it)
+
         }
 
         onBackImgClick()
         onFavoriteClick()
+
+        bindRecyclerView()
+        observeSimilarProducts()
+    }
+
+    private fun setupToolbarActions() {
+        binding.customDetailToolbar.imgArrow.setOnClickListener {
+            Log.d("DetailFragment", "Back arrow clicked")
+            findNavController().navigateUp()
+        }
     }
 
     private fun bindProductDetails(product: ProductsModelItem) {
@@ -85,6 +109,19 @@ class DetailFragment : Fragment() {
                 detailViewModel.insertProduct(it)
                 Toast.makeText(requireContext(), "Product saved to favorites", Toast.LENGTH_LONG).show()
             }
+        }
+    }
+
+    private fun bindRecyclerView() {
+        binding.rvSimilarProducts.apply {
+            layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL,false)
+            adapter = similarProductAdapter
+        }
+    }
+
+    private fun observeSimilarProducts() {
+        detailViewModel.similarProducts.observe(viewLifecycleOwner) { similarProducts ->
+            similarProductAdapter.setProducts(similarProducts)
         }
     }
 

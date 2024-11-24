@@ -17,6 +17,7 @@ class ProductCategoryAdapter(
     fun setCategories(categories : List<String>){
         this.categories.clear()
         this.categories.addAll(categories)
+        selectedPosition = if (categories.isNotEmpty()) 0 else -1
         notifyDataSetChanged()
     }
 
@@ -34,14 +35,11 @@ class ProductCategoryAdapter(
         holder.bind(category, position == selectedPosition)
 
         holder.binding.root.setOnClickListener {
-            // Eğer yeni pozisyon seçili pozisyon ile aynıysa hiçbir şey yapma
             if (selectedPosition == position) return@setOnClickListener
 
-            // Seçili pozisyonu güncelle
             val previousPosition = selectedPosition
             selectedPosition = position
 
-            // Yalnızca değişen pozisyonları yenile
             notifyItemChanged(previousPosition)
             notifyItemChanged(selectedPosition)
 

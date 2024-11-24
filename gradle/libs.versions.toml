@@ -7,6 +7,7 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
 kotlinStdlib = "2.0.20"
+lottie = "6.0.0"
 material = "1.12.0"
 activity = "1.9.3"
 constraintlayout = "2.2.0"
@@ -24,6 +25,7 @@ glide = "4.12.0"
 [libraries]
 android-gif-drawable = { module = "pl.droidsonroids.gif:android-gif-drawable", version.ref = "androidGifDrawable" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinStdlib" }
+lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }

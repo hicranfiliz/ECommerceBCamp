@@ -1,10 +1,12 @@
 package com.example.ecommercebcamp.fragments
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -29,6 +31,7 @@ class HomeFragment : Fragment() {
 
     companion object {
         const val PRODUCT_ID = "com.example.easyfooddemo.fragments.id"
+        const val SIMILAR_PRODUCTS = "com.example.easyfooddemo.fragments.similar_products"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,20 +55,63 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setUpToolbarFavAction()
+        setUpToolbarSearchAction()
         showCategoryItemsRV()
         showProductItemsRV()
 
         homeViewModel.fetchProducts()
 
+        observeLoadingState()
         observeProductCategories()
         observeProduct()
+        observeFilteredProducts()
         onProductClick()
+    }
+
+    private fun setUpToolbarFavAction() {
+        binding.customToolbarr.imgFav.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_favoritesFragment)
+        }
+    }
+
+    private fun setUpToolbarSearchAction() {
+        binding.customToolbarr.imgSearch.setOnClickListener {
+            showSearchDialog()
+        }
+    }
+
+    private fun showSearchDialog() {
+        val searchDialog = AlertDialog.Builder(requireContext())
+        val searchInput = EditText(requireContext()).apply {
+            hint = "Search for a product..."
+        }
+        searchDialog.setTitle("Search")
+            .setView(searchInput)
+            .setPositiveButton("Search") { _, _ ->
+                val query = searchInput.text.toString()
+                searchProducts(query)
+            }
+            .setNegativeButton("Cancel", null)
+            .create()
+            .show()
+    }
+
+    private fun searchProducts(query: String) {
+        homeViewModel.searchProducts(query)
     }
 
     private fun onProductClick() {
         productAdapter.onProductClick = {product ->
+            val allProductsByCategory = homeViewModel.productsByCategory.value ?: emptyMap()
+            val similarProducts = allProductsByCategory[product.category]?.take(4)
+
             val bundle = Bundle().apply {
                 putParcelable(PRODUCT_ID, product)
+                putParcelableArrayList(
+                    SIMILAR_PRODUCTS,
+                    ArrayList(similarProducts ?: emptyList())
+                )
             }
             findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
         }
@@ -85,6 +131,13 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun observeFilteredProducts() {
+        homeViewModel.filteredProducts.observe(viewLifecycleOwner) { filteredProducts ->
+            productAdapter.setProducts(filteredProducts)
+        }
+    }
+
+
     private fun observeProductCategories() {
         homeViewModel.categories.observe(viewLifecycleOwner, Observer { categories ->
             if (categories != null) {
@@ -99,6 +152,16 @@ class HomeFragment : Fragment() {
             firstCategory?.let {
                 productAdapter.setProducts(groupedProducts[it] ?: emptyList())
             }
+        }
+    }
+
+    private fun observeLoadingState() {
+        homeViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.rvCategories.visibility = if (isLoading) View.GONE else View.VISIBLE
+            binding.rvProducts.visibility = if (isLoading) View.GONE else View.VISIBLE
+            binding.tvCategories.visibility = if (isLoading) View.GONE else View.VISIBLE
+            binding.tvProductss.visibility = if (isLoading) View.GONE else View.VISIBLE
         }
     }
 
