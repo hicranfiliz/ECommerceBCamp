@@ -12,6 +12,8 @@ import com.example.ecommercebcamp.viewHolders.ProductViewHolder
 
 class FavoriteProductsAdapter() : RecyclerView.Adapter<FavoriteProductsViewHolder>() {
 
+    lateinit var onProductClick : ((ProductsModelItem) -> Unit)
+
     private val diffUtil = object : DiffUtil.ItemCallback<ProductsModelItem>() {
         override fun areItemsTheSame(oldItem: ProductsModelItem, newItem: ProductsModelItem): Boolean {
             return oldItem.id == newItem.id
@@ -26,7 +28,7 @@ class FavoriteProductsAdapter() : RecyclerView.Adapter<FavoriteProductsViewHolde
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteProductsViewHolder {
-        return FavoriteProductsViewHolder(ItemLayoutProductBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return FavoriteProductsViewHolder(ItemLayoutProductBinding.inflate(LayoutInflater.from(parent.context), parent, false), onProductClick)
     }
 
     override fun getItemCount(): Int {

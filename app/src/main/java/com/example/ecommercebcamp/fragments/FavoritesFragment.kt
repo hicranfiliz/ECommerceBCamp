@@ -20,8 +20,11 @@ import com.example.ecommercebcamp.adapters.SimilarProductAdapter
 import com.example.ecommercebcamp.databinding.FragmentFavoritesBinding
 import com.example.ecommercebcamp.db.ProductDatabase
 import com.example.ecommercebcamp.db.ProductRepository
+import com.example.ecommercebcamp.fragments.HomeFragment.Companion.PRODUCT_ID
+import com.example.ecommercebcamp.fragments.HomeFragment.Companion.SIMILAR_PRODUCTS
 import com.example.ecommercebcamp.viewModel.DetailViewModel
 import com.example.ecommercebcamp.viewModel.DetailViewModelFactory
+import com.example.ecommercebcamp.viewModel.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
 
 class FavoritesFragment : Fragment() {
@@ -32,12 +35,15 @@ class FavoritesFragment : Fragment() {
     private lateinit var viewModel : DetailViewModel
     private lateinit var favoriteAdapter: FavoriteProductsAdapter
 
+    private lateinit var homeViewModel: HomeViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val dao = ProductDatabase.getInstance(requireContext()).productDao
         val repository = ProductRepository(dao)
         val factory = DetailViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
+        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         favoriteAdapter = FavoriteProductsAdapter()
     }
 
@@ -58,6 +64,23 @@ class FavoritesFragment : Fragment() {
         observeFavorites()
 
         swipeToDelete()
+        onFavProductClick()
+    }
+
+    private fun onFavProductClick() {
+        favoriteAdapter.onProductClick = {product ->
+            val allProductsByCategory = homeViewModel.productsByCategory.value ?: emptyMap()
+            val similarProducts = allProductsByCategory[product.category]?.take(4)
+
+            val bundle = Bundle().apply {
+                putParcelable(PRODUCT_ID, product)
+                putParcelableArrayList(
+                    SIMILAR_PRODUCTS,
+                    ArrayList(similarProducts ?: emptyList())
+                )
+            }
+            findNavController().navigate(R.id.action_favoritesFragment_to_detailFragment, bundle)
+        }
     }
 
     private fun setupToolbar() {
