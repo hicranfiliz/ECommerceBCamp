@@ -9,6 +9,8 @@ import com.example.ecommercebcamp.viewHolders.SimilarProductViewHolder
 
 class SimilarProductAdapter() : RecyclerView.Adapter<SimilarProductViewHolder>() {
 
+    lateinit var onProductClick : ((ProductsModelItem) -> Unit)
+
     private var similarityList = mutableListOf<ProductsModelItem>()
 
     fun setProducts(productList: List<ProductsModelItem>) {
@@ -20,7 +22,8 @@ class SimilarProductAdapter() : RecyclerView.Adapter<SimilarProductViewHolder>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimilarProductViewHolder {
         return SimilarProductViewHolder(
             ItemLayoutProductBinding
-                .inflate(LayoutInflater.from(parent.context), parent, false)
+                .inflate(LayoutInflater.from(parent.context), parent, false),
+            onProductClick
         )
     }
 

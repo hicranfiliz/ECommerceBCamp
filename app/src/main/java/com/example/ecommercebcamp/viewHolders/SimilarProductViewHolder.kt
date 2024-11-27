@@ -6,13 +6,17 @@ import com.example.ecommercebcamp.databinding.ItemLayoutProductBinding
 import com.example.ecommercebcamp.model.ProductsModelItem
 
 class SimilarProductViewHolder(
-    val binding: ItemLayoutProductBinding
+    val binding: ItemLayoutProductBinding,
+    private val onProductClick : (ProductsModelItem) -> Unit
 ): RecyclerView.ViewHolder(binding.root) {
 
     fun bind(product: ProductsModelItem){
         Glide.with(binding.root.context)
             .load(product.image)
             .into(binding.imgProduct)
+        binding.root.setOnClickListener {
+            onProductClick(product)
+        }
         binding.tvProductName.text = product.title
         binding.tvProductCost.text = "$ " + product.price.toString()
     }

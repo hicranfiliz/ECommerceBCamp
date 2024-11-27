@@ -29,7 +29,11 @@
         android:id="@+id/detailFragment"
         android:name="com.example.ecommercebcamp.fragments.DetailFragment"
         android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail" />
+        tools:layout="@layout/fragment_detail" >
+        <action
+            android:id="@+id/action_detailFragment_self"
+            app:destination="@id/detailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="com.example.ecommercebcamp.fragments.FavoritesFragment"

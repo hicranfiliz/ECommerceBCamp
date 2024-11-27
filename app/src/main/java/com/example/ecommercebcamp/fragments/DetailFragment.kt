@@ -32,6 +32,8 @@ class DetailFragment : Fragment() {
     private lateinit var detailViewModel: DetailViewModel
     private lateinit var similarProductAdapter: SimilarProductAdapter
 
+    private lateinit var homeViewModel: HomeViewModel
+
     private var product: ProductsModelItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +43,7 @@ class DetailFragment : Fragment() {
         val repository = ProductRepository(dao)
         val factory = DetailViewModelFactory(repository)
         detailViewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
+        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         similarProductAdapter = SimilarProductAdapter()
     }
 
@@ -70,6 +73,10 @@ class DetailFragment : Fragment() {
 
         onBackImgClick()
         onFavoriteClick()
+
+        homeViewModel.fetchProducts()
+
+        onSimilarProductClick()
 
         bindRecyclerView()
         observeSimilarProducts()
@@ -104,6 +111,22 @@ class DetailFragment : Fragment() {
                 detailViewModel.insertProduct(it)
                 Toast.makeText(requireContext(), "Product saved to favorites", Toast.LENGTH_LONG).show()
             }
+        }
+    }
+
+    private fun onSimilarProductClick() {
+        similarProductAdapter.onProductClick = {product ->
+            val allProductsByCategory = homeViewModel.productsByCategory.value ?: emptyMap()
+            val similarProducts = allProductsByCategory[product.category]?.take(4)
+
+            val bundle = Bundle().apply {
+                putParcelable(PRODUCT_ID, product)
+                putParcelableArrayList(
+                    SIMILAR_PRODUCTS,
+                    ArrayList(similarProducts ?: emptyList())
+                )
+            }
+            findNavController().navigate(R.id.action_detailFragment_self, bundle)
         }
     }
 
