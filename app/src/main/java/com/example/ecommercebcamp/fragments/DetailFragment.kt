@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,6 +17,8 @@ import com.example.ecommercebcamp.adapters.SimilarProductAdapter
 import com.example.ecommercebcamp.databinding.FragmentDetailBinding
 import com.example.ecommercebcamp.db.ProductDatabase
 import com.example.ecommercebcamp.db.ProductRepository
+import com.example.ecommercebcamp.fragments.HomeFragment.Companion.PRODUCT_ID
+import com.example.ecommercebcamp.fragments.HomeFragment.Companion.SIMILAR_PRODUCTS
 import com.example.ecommercebcamp.model.ProductsModelItem
 import com.example.ecommercebcamp.viewModel.DetailViewModel
 import com.example.ecommercebcamp.viewModel.DetailViewModelFactory
@@ -46,16 +49,15 @@ class DetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
+        //_binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupToolbarActions()
-
-        product = arguments?.getParcelable<ProductsModelItem>(HomeFragment.PRODUCT_ID)
-        val similarProducts = arguments?.getParcelableArrayList<ProductsModelItem>(HomeFragment.SIMILAR_PRODUCTS)
+        product = arguments?.getParcelable<ProductsModelItem>(PRODUCT_ID)
+        val similarProducts = arguments?.getParcelableArrayList<ProductsModelItem>(SIMILAR_PRODUCTS)
 
         similarProducts?.let {
             similarProductAdapter.setProducts(it)
@@ -71,13 +73,6 @@ class DetailFragment : Fragment() {
 
         bindRecyclerView()
         observeSimilarProducts()
-    }
-
-    private fun setupToolbarActions() {
-        binding.customDetailToolbar.imgArrow.setOnClickListener {
-            Log.d("DetailFragment", "Back arrow clicked")
-            findNavController().navigateUp()
-        }
     }
 
     private fun bindProductDetails(product: ProductsModelItem) {
@@ -98,7 +93,7 @@ class DetailFragment : Fragment() {
     }
 
     private fun onBackImgClick(){
-        binding.customDetailToolbar.imgArrow.setOnClickListener {
+        binding.toolbar.imgArrow.setOnClickListener {
             findNavController().navigateUp()
         }
     }

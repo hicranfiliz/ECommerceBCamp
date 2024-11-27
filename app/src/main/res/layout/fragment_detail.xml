@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.DetailFragment">
 
-    <include
-        android:id="@+id/custom_detail_toolbar"
-        layout="@layout/detail_toolbar"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"/>
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/primary">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/detail_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -30,57 +39,57 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_250sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                app:layout_constraintTop_toTopOf="parent"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView
                 android:id="@+id/tvInstructions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="WD 2TB Elements Portable External Hard Drive - USB 3.0 "
-                android:layout_marginTop="@dimen/_16sdp"
                 android:layout_marginStart="@dimen/_5sdp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
+                android:layout_marginTop="@dimen/_16sdp"
                 android:fontFamily="@font/font"
-                android:textSize="@dimen/_15sdp"/>
+                android:text="WD 2TB Elements Portable External Hard Drive - USB 3.0 "
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="@dimen/_5sdp">
+                android:layout_marginTop="@dimen/_5sdp"
+                android:orientation="horizontal">
 
                 <RatingBar
                     android:id="@+id/ratingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:stepSize="0.5"
-                    android:isIndicator="true"
-                    android:progressTint="@color/yellow"
+                    android:layout_marginTop="8dp"
                     android:backgroundTint="@color/gray"
-                    android:layout_marginTop="8dp" />
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    android:progressTint="@color/yellow"
+                    android:stepSize="0.5" />
 
                 <TextView
                     android:id="@+id/tvRatingText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4.5"
-                    android:fontFamily="@font/font"
                     android:layout_gravity="center"
-                    android:textColor="@color/black"
-                    android:layout_marginStart="5dp" />
+                    android:layout_marginStart="5dp"
+                    android:fontFamily="@font/font"
+                    android:text="4.5"
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/tvReviewCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="(203)"
-                    android:fontFamily="@font/font"
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
+                    android:fontFamily="@font/font"
+                    android:text="(203)"
                     android:textColor="@color/gray" />
             </LinearLayout>
 
@@ -88,49 +97,49 @@
                 android:id="@+id/tvCategoryText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Category: Electronics"
-                android:textStyle="bold"
-                android:fontFamily="@font/font"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:textColor="@color/black" />
+                android:fontFamily="@font/font"
+                android:text="Category: Electronics"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Description"
-                android:textStyle="bold"
-                android:fontFamily="@font/font"
-                android:textSize="@dimen/_12sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:textColor="@color/black" />
+                android:fontFamily="@font/font"
+                android:text="Description"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvDescriptionText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text=" USB 3.0 and USB 2.0 Compatibility"
-                android:fontFamily="@font/font"
-                android:textSize="@dimen/_12sdp"
                 android:layout_marginTop="@dimen/_2sdp"
-                android:textColor="@color/black" />
+                android:fontFamily="@font/font"
+                android:text=" USB 3.0 and USB 2.0 Compatibility"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp" />
 
             <TextView
                 android:id="@+id/tvsimilarText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Similar Products"
-                android:textStyle="bold"
-                android:fontFamily="@font/font"
-                android:textSize="@dimen/_12sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:textColor="@color/black" />
+                android:fontFamily="@font/font"
+                android:text="Similar Products"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvSimilarProducts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_10sdp"/>
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_16sdp" />
 
 
         </LinearLayout>
@@ -141,48 +150,48 @@
         android:id="@+id/btnAddToFav"
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
-        android:src="@drawable/heart"
+        android:layout_marginEnd="@dimen/_10sdp"
         android:backgroundTint="@color/accent"
+        android:src="@drawable/heart"
         android:tint="@color/white"
         app:layout_anchor="@id/imgProduct"
-        app:layout_anchorGravity="bottom|end"
-        android:layout_marginEnd="@dimen/_10sdp"/>
+        app:layout_anchorGravity="bottom|end" />
 
     <TextView
         android:id="@+id/priceText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="$499.00"
-        android:textStyle="bold"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginBottom="@dimen/_10sdp"
         android:layout_gravity="bottom|start"
+        android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:text="$499.00"
         android:textColor="@color/black"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <com.google.android.material.button.MaterialButton
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:paddingHorizontal="16dp"
         android:layout_marginEnd="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_5sdp"
-        android:paddingVertical="8dp"
         android:backgroundTint="@color/black"
-        android:text="@string/add_to_cart"
-        android:textSize="@dimen/_10sdp"
-        android:fontFamily="@font/font"
-        app:cornerRadius="@dimen/_10sdp"
-        android:textColor="@color/white"
         android:drawableStart="@drawable/cart"
         android:drawablePadding="6dp"
+        android:fontFamily="@font/font"
         android:gravity="center"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        android:text="@string/add_to_cart"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_10sdp"
+        app:cornerRadius="@dimen/_10sdp"
         app:icon="@drawable/cart"
-        app:iconSize="@dimen/_20sdp"
         app:iconGravity="textStart"
-        app:iconPadding="6dp" />
+        app:iconPadding="6dp"
+        app:iconSize="@dimen/_20sdp" />
 
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -190,9 +199,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:indeterminate="true"
+        android:visibility="gone"
         app:layout_anchor="@id/imgProduct"
-        app:layout_anchorGravity="bottom"
-        android:visibility="gone"/>
+        app:layout_anchorGravity="bottom" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

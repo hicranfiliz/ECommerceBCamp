@@ -30,8 +30,7 @@ class SplashFragment : Fragment() {
             if (userName == null){
                 findNavController().navigate(R.id.action_splashFragment_to_userInfoFragment)
             }else{
-                findNavController().navigate(R.id.action_splashFragment_to_userInfoFragment)
-                //findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+                findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
             }
         }, 3000)
     }

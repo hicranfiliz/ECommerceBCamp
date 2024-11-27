@@ -63,6 +63,8 @@ class FavoritesFragment : Fragment() {
         bindRecyclerView()
         observeFavorites()
 
+        homeViewModel.fetchProducts()
+
         swipeToDelete()
         onFavProductClick()
     }
