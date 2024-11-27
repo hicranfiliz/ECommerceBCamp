@@ -32,6 +32,7 @@ class SplashFragment : Fragment() {
             }else{
                 findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
             }
+
         }, 3000)
     }
 }
