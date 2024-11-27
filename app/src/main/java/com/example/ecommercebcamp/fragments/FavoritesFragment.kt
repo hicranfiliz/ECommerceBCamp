@@ -126,7 +126,12 @@ class FavoritesFragment : Fragment() {
 
     private fun observeFavorites(){
         viewModel.favorites.observe(viewLifecycleOwner, Observer{ fav ->
-            if (fav != null){
+            if (fav.isNullOrEmpty()){
+                binding.tvEmptyFavorites.visibility = View.VISIBLE
+                binding.rvFavorites.visibility = View.GONE
+            } else {
+                binding.tvEmptyFavorites.visibility = View.GONE
+                binding.rvFavorites.visibility = View.VISIBLE
                 favoriteAdapter.differ.submitList(fav)
             }
         })

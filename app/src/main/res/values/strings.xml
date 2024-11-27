@@ -6,4 +6,5 @@
     <string name="products">Products</string>
     <string name="add_to_cart">Add to cart</string>
     <string name="detail">Details</string>
+    <string name="nofav">No favorites added yet!</string>
 </resources>
