@@ -151,7 +151,7 @@
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
         android:layout_marginEnd="@dimen/_10sdp"
-        android:backgroundTint="@color/accent"
+        app:backgroundTint="@color/white"
         android:src="@drawable/heart"
         android:tint="@color/white"
         app:layout_anchor="@id/imgProduct"

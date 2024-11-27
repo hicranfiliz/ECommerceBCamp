@@ -10,7 +10,8 @@ import com.example.ecommercebcamp.model.ProductsModelItem
 import com.example.ecommercebcamp.viewHolders.FavoriteProductsViewHolder
 import com.example.ecommercebcamp.viewHolders.ProductViewHolder
 
-class FavoriteProductsAdapter() : RecyclerView.Adapter<FavoriteProductsViewHolder>() {
+class FavoriteProductsAdapter(
+) : RecyclerView.Adapter<FavoriteProductsViewHolder>() {
 
     lateinit var onProductClick : ((ProductsModelItem) -> Unit)
 

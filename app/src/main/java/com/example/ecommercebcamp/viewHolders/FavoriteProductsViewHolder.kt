@@ -7,7 +7,7 @@ import com.example.ecommercebcamp.model.ProductsModelItem
 
 class FavoriteProductsViewHolder(
     val binding: ItemLayoutProductBinding,
-    private val onProductClick : (ProductsModelItem) -> Unit
+    private val onProductClick : (ProductsModelItem) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(product: ProductsModelItem){
@@ -19,5 +19,6 @@ class FavoriteProductsViewHolder(
         }
         binding.tvProductName.text = product.title
         binding.tvProductCost.text = "$ " + product.price.toString()
+
     }
 }

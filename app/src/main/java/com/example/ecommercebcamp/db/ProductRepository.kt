@@ -13,4 +13,8 @@ class ProductRepository(private val dao: ProductDao) {
     suspend fun delete(product: ProductsModelItem){
         return dao.delete(product)
     }
+
+    suspend fun isProductFavorite(productId: String): Boolean {
+        return dao.isProductFavorite(productId) > 0
+    }
 }

@@ -19,4 +19,7 @@ interface ProductDao {
 
     @Query("SELECT * FROM productTable")
     fun getAll(): LiveData<List<ProductsModelItem>>
+
+    @Query("SELECT COUNT(*) FROM productTable WHERE id = :productId")
+    suspend fun isProductFavorite(productId: String): Int
 }

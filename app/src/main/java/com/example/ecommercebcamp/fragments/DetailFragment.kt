@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -61,6 +62,7 @@ class DetailFragment : Fragment() {
 
         product = arguments?.getParcelable<ProductsModelItem>(PRODUCT_ID)
         val similarProducts = arguments?.getParcelableArrayList<ProductsModelItem>(SIMILAR_PRODUCTS)
+        detailViewModel.checkFavorite(productId = product?.id.toString())
 
         similarProducts?.let {
             similarProductAdapter.setProducts(it)
@@ -71,6 +73,8 @@ class DetailFragment : Fragment() {
 
         }
 
+        setFavButton()
+
         onBackImgClick()
         onFavoriteClick()
 
@@ -80,6 +84,19 @@ class DetailFragment : Fragment() {
 
         bindRecyclerView()
         observeSimilarProducts()
+    }
+
+    private fun setFavButton() {
+        detailViewModel.isFavorite.observe(viewLifecycleOwner){ isFav ->
+            val fab = binding.btnAddToFav
+            if (isFav){
+                fab.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.accent))
+                fab.setImageResource(R.drawable.heart)
+            } else{
+                fab.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.white))
+                fab.setImageResource(R.drawable.heart)
+            }
+        }
     }
 
     private fun bindProductDetails(product: ProductsModelItem) {
@@ -108,8 +125,9 @@ class DetailFragment : Fragment() {
     private fun onFavoriteClick(){
         binding.btnAddToFav.setOnClickListener {
             product?.let {
-                detailViewModel.insertProduct(it)
-                Toast.makeText(requireContext(), "Product saved to favorites", Toast.LENGTH_LONG).show()
+                detailViewModel.toggleFavorite(it)
+                //detailViewModel.insertProduct(it)
+                //Toast.makeText(requireContext(), "Product saved to favorites", Toast.LENGTH_LONG).show()
             }
         }
     }
