@@ -6,19 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ecommercebcamp.model.ProductsModelItem
-import com.example.ecommercebcamp.retrofit.ProductService
-import com.example.ecommercebcamp.retrofit.RetrofitInstance
+import com.example.ecommercebcamp.retrofit.ProductRepository
 import kotlinx.coroutines.launch
 
-class HomeViewModel() : ViewModel() {
-
-    private val productService = RetrofitInstance.getRetrofitInstance().create(ProductService::class.java)
+class HomeViewModel(
+    private val productRepository: ProductRepository
+) : ViewModel() {
 
     private val _categories = MutableLiveData<List<String>>()
     val categories: LiveData<List<String>> get() = _categories
-
-    private val _productsByCategory = MutableLiveData<Map<String, List<ProductsModelItem>>>()
-    val productsByCategory: LiveData<Map<String, List<ProductsModelItem>>> get() = _productsByCategory
 
     private val _allProducts = MutableLiveData<List<ProductsModelItem>>()
     val allProducts: LiveData<List<ProductsModelItem>> get() = _allProducts
@@ -29,24 +25,53 @@ class HomeViewModel() : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
-    fun fetchProducts() {
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> get() = _errorMessage
+
+    init {
+        fetchCategories()
+        fetchAllProducts()
+    }
+
+    fun fetchCategories() {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val response = productService.getProducts()
-                if (response.isSuccessful) {
-                    val productList = response.body() ?: emptyList()
-                    _allProducts.value = productList
-                    _categories.value = productList.map {
-                        it.category
-                    }.
-                    filterNotNull().distinct()
-                    _productsByCategory.value = productList.groupBy { it.category ?: "" }
-                } else {
-                    Log.e("HomeViewModel", "Error: ${response.errorBody()?.string()}")
-                }
+                val response = productRepository.getCategories()
+                _categories.value = response
             } catch (e: Exception) {
-                Log.e("HomeViewModel", "Exception: ${e.message}")
+                Log.e("HomeViewModel", "Error fetching categories: ${e.message}")
+                _errorMessage.value = "Failed to fetch categories: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun fetchAllProducts() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = productRepository.getAllProducts()
+                _allProducts.value = response
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "Error fetching products: ${e.message}")
+                _errorMessage.value = "Failed to fetch products: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun fetchProductsByCategory(category: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = productRepository.getProductsByCategory(category)
+                _filteredProducts.value = response
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "Error fetching products by category: ${e.message}")
+                _errorMessage.value = "Failed to fetch products by category: ${e.message}"
             } finally {
                 _isLoading.value = false
             }
@@ -59,5 +84,9 @@ class HomeViewModel() : ViewModel() {
                     it.category?.contains(query, ignoreCase = true) == true
         } ?: emptyList()
         _filteredProducts.value = filteredList
+    }
+
+    fun clearError() {
+        _errorMessage.value = null
     }
 }

@@ -78,7 +78,7 @@ class DetailFragment : Fragment() {
         onBackImgClick()
         onFavoriteClick()
 
-        homeViewModel.fetchProducts()
+        homeViewModel.fetchAllProducts()
 
         onSimilarProductClick()
 
@@ -134,15 +134,9 @@ class DetailFragment : Fragment() {
 
     private fun onSimilarProductClick() {
         similarProductAdapter.onProductClick = {product ->
-            val allProductsByCategory = homeViewModel.productsByCategory.value ?: emptyMap()
-            val similarProducts = allProductsByCategory[product.category]?.take(4)
 
             val bundle = Bundle().apply {
                 putParcelable(PRODUCT_ID, product)
-                putParcelableArrayList(
-                    SIMILAR_PRODUCTS,
-                    ArrayList(similarProducts ?: emptyList())
-                )
             }
             findNavController().navigate(R.id.action_detailFragment_self, bundle)
         }

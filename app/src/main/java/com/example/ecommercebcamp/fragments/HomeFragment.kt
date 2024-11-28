@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -17,8 +18,15 @@ import com.example.ecommercebcamp.R
 import com.example.ecommercebcamp.adapters.ProductAdapter
 import com.example.ecommercebcamp.adapters.ProductCategoryAdapter
 import com.example.ecommercebcamp.databinding.FragmentHomeBinding
+import com.example.ecommercebcamp.db.ProductDatabase
 import com.example.ecommercebcamp.model.ProductsModelItem
+import com.example.ecommercebcamp.retrofit.ProductRepository
+import com.example.ecommercebcamp.retrofit.ProductService
+import com.example.ecommercebcamp.retrofit.RetrofitInstance
+import com.example.ecommercebcamp.viewModel.DetailViewModel
+import com.example.ecommercebcamp.viewModel.DetailViewModelFactory
 import com.example.ecommercebcamp.viewModel.HomeViewModel
+import com.example.ecommercebcamp.viewModel.HomeViewModelFactory
 
 class HomeFragment : Fragment() {
 
@@ -37,7 +45,10 @@ class HomeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+
+        val repository = ProductRepository(RetrofitInstance.getRetrofitInstance().create(ProductService::class.java))
+        val factory = HomeViewModelFactory(repository)
+        homeViewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
         productCategoryAdapter = ProductCategoryAdapter{ category ->
             onCategorySelected(category)
         }
@@ -62,7 +73,8 @@ class HomeFragment : Fragment() {
         showCategoryItemsRV()
         showProductItemsRV()
 
-        homeViewModel.fetchProducts()
+        homeViewModel.fetchCategories()
+        homeViewModel.fetchAllProducts()
 
         observeLoadingState()
         observeProductCategories()
@@ -121,15 +133,9 @@ class HomeFragment : Fragment() {
 
     private fun onProductClick() {
         productAdapter.onProductClick = {product ->
-            val allProductsByCategory = homeViewModel.productsByCategory.value ?: emptyMap()
-            val similarProducts = allProductsByCategory[product.category]?.take(4)
 
             val bundle = Bundle().apply {
-                putParcelable(PRODUCT_ID, product)
-                putParcelableArrayList(
-                    SIMILAR_PRODUCTS,
-                    ArrayList(similarProducts ?: emptyList())
-                )
+                //putParcelable(PRODUCT_ID, product.category)
             }
             findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
         }
@@ -165,10 +171,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun observeProduct() {
-        homeViewModel.productsByCategory.observe(viewLifecycleOwner) { groupedProducts ->
-            val firstCategory = groupedProducts.keys.firstOrNull()
-            firstCategory?.let {
-                productAdapter.setProducts(groupedProducts[it] ?: emptyList())
+        homeViewModel.allProducts.observe(viewLifecycleOwner) { products ->
+            if (products != null){
+                productAdapter.setProducts(products)
             }
         }
     }
@@ -184,9 +189,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun onCategorySelected(category: String) {
-        homeViewModel.productsByCategory.value?.let { groupedProducts ->
-            productAdapter.setProducts(groupedProducts[category] ?: emptyList())
-        }
+        homeViewModel.fetchProductsByCategory(category)
+//        homeViewModel.productsByCategory.value?.let { groupedProducts ->
+//            productAdapter.setProducts(groupedProducts[category] ?: emptyList())
+//        }
     }
 
     override fun onDestroyView() {

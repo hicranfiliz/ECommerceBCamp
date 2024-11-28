@@ -17,7 +17,7 @@ class ProductCategoryAdapter(
     fun setCategories(categories : List<String>){
         this.categories.clear()
         this.categories.addAll(categories)
-        selectedPosition = if (categories.isNotEmpty()) 0 else -1
+        //selectedPosition = if (categories.isNotEmpty()) 0 else -1
         notifyDataSetChanged()
     }
 
