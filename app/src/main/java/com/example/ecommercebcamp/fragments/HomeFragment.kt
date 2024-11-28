@@ -135,7 +135,7 @@ class HomeFragment : Fragment() {
         productAdapter.onProductClick = {product ->
 
             val bundle = Bundle().apply {
-                //putParcelable(PRODUCT_ID, product.category)
+                putParcelable(PRODUCT_ID, product)
             }
             findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
         }

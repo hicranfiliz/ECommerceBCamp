@@ -21,9 +21,12 @@ import com.example.ecommercebcamp.db.ProductRepository
 import com.example.ecommercebcamp.fragments.HomeFragment.Companion.PRODUCT_ID
 import com.example.ecommercebcamp.fragments.HomeFragment.Companion.SIMILAR_PRODUCTS
 import com.example.ecommercebcamp.model.ProductsModelItem
+import com.example.ecommercebcamp.retrofit.ProductService
+import com.example.ecommercebcamp.retrofit.RetrofitInstance
 import com.example.ecommercebcamp.viewModel.DetailViewModel
 import com.example.ecommercebcamp.viewModel.DetailViewModelFactory
 import com.example.ecommercebcamp.viewModel.HomeViewModel
+import com.example.ecommercebcamp.viewModel.HomeViewModelFactory
 
 class DetailFragment : Fragment() {
 
@@ -44,7 +47,12 @@ class DetailFragment : Fragment() {
         val repository = ProductRepository(dao)
         val factory = DetailViewModelFactory(repository)
         detailViewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
-        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+
+        val serviceRepository = com.example.ecommercebcamp.retrofit.ProductRepository(
+            RetrofitInstance.getRetrofitInstance().create(ProductService::class.java)
+        )
+        val homeFactory = HomeViewModelFactory(serviceRepository)
+        homeViewModel = ViewModelProvider(this, homeFactory)[HomeViewModel::class.java]
         similarProductAdapter = SimilarProductAdapter()
     }
 
@@ -61,24 +69,19 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         product = arguments?.getParcelable<ProductsModelItem>(PRODUCT_ID)
-        val similarProducts = arguments?.getParcelableArrayList<ProductsModelItem>(SIMILAR_PRODUCTS)
-        detailViewModel.checkFavorite(productId = product?.id.toString())
 
-        similarProducts?.let {
-            similarProductAdapter.setProducts(it)
-        }
+        product?.let { selectedProduct ->
+            bindProductDetails(selectedProduct)
 
-        product?.let {
-            bindProductDetails(it)
-
+            selectedProduct.category?.let { category ->
+                homeViewModel.fetchProductsByCategory(category)
+            }
         }
 
         setFavButton()
 
         onBackImgClick()
         onFavoriteClick()
-
-        homeViewModel.fetchAllProducts()
 
         onSimilarProductClick()
 
@@ -150,8 +153,9 @@ class DetailFragment : Fragment() {
     }
 
     private fun observeSimilarProducts() {
-        detailViewModel.similarProducts.observe(viewLifecycleOwner) { similarProducts ->
-            similarProductAdapter.setProducts(similarProducts)
+        homeViewModel.filteredProducts.observe(viewLifecycleOwner) { similarProducts ->
+            val sProducts = similarProducts.take(4)
+            similarProductAdapter.setProducts(sProducts)
         }
     }
 

@@ -1,13 +1,10 @@
 package com.example.ecommercebcamp.fragments
 
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -16,15 +13,12 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ecommercebcamp.R
 import com.example.ecommercebcamp.adapters.FavoriteProductsAdapter
-import com.example.ecommercebcamp.adapters.SimilarProductAdapter
 import com.example.ecommercebcamp.databinding.FragmentFavoritesBinding
 import com.example.ecommercebcamp.db.ProductDatabase
 import com.example.ecommercebcamp.db.ProductRepository
 import com.example.ecommercebcamp.fragments.HomeFragment.Companion.PRODUCT_ID
-import com.example.ecommercebcamp.fragments.HomeFragment.Companion.SIMILAR_PRODUCTS
 import com.example.ecommercebcamp.viewModel.DetailViewModel
 import com.example.ecommercebcamp.viewModel.DetailViewModelFactory
-import com.example.ecommercebcamp.viewModel.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
 
 class FavoritesFragment : Fragment() {
@@ -32,10 +26,8 @@ class FavoritesFragment : Fragment() {
     private var _binding: FragmentFavoritesBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel : DetailViewModel
+    private lateinit var viewModel: DetailViewModel
     private lateinit var favoriteAdapter: FavoriteProductsAdapter
-
-    private lateinit var homeViewModel: HomeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +35,6 @@ class FavoritesFragment : Fragment() {
         val repository = ProductRepository(dao)
         val factory = DetailViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
-        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         favoriteAdapter = FavoriteProductsAdapter()
     }
 
@@ -68,7 +59,7 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun onFavProductClick() {
-        favoriteAdapter.onProductClick = {product ->
+        favoriteAdapter.onProductClick = { product ->
             val bundle = Bundle().apply {
                 putParcelable(PRODUCT_ID, product)
             }
@@ -86,7 +77,7 @@ class FavoritesFragment : Fragment() {
         val itemTouchHelper = object : ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP or ItemTouchHelper.DOWN,
             ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
-        ){
+        ) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -117,9 +108,9 @@ class FavoritesFragment : Fragment() {
         }
     }
 
-    private fun observeFavorites(){
-        viewModel.favorites.observe(viewLifecycleOwner, Observer{ fav ->
-            if (fav.isNullOrEmpty()){
+    private fun observeFavorites() {
+        viewModel.favorites.observe(viewLifecycleOwner, Observer { fav ->
+            if (fav.isNullOrEmpty()) {
                 binding.tvEmptyFavorites.visibility = View.VISIBLE
                 binding.rvFavorites.visibility = View.GONE
             } else {
