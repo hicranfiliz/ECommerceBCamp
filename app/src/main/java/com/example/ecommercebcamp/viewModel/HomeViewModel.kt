@@ -86,7 +86,4 @@ class HomeViewModel(
         _filteredProducts.value = filteredList
     }
 
-    fun clearError() {
-        _errorMessage.value = null
-    }
 }

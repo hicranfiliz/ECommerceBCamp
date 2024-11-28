@@ -69,7 +69,7 @@ class HomeFragment : Fragment() {
 
         setUpToolbarInfo()
         setUpToolbarFavAction()
-        setUpToolbarSearchAction()
+        setUpSearchAction()
         showCategoryItemsRV()
         showProductItemsRV()
 
@@ -105,30 +105,10 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setUpToolbarSearchAction() {
+    private fun setUpSearchAction(){
         binding.customToolbarr.imgSearch.setOnClickListener {
-            showSearchDialog()
+            findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
         }
-    }
-
-    private fun showSearchDialog() {
-        val searchDialog = AlertDialog.Builder(requireContext())
-        val searchInput = EditText(requireContext()).apply {
-            hint = "Search for a product..."
-        }
-        searchDialog.setTitle("Search")
-            .setView(searchInput)
-            .setPositiveButton("Search") { _, _ ->
-                val query = searchInput.text.toString()
-                searchProducts(query)
-            }
-            .setNegativeButton("Cancel", null)
-            .create()
-            .show()
-    }
-
-    private fun searchProducts(query: String) {
-        homeViewModel.searchProducts(query)
     }
 
     private fun onProductClick() {
