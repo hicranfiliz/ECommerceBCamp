@@ -12,9 +12,6 @@ class DetailViewModel(private val repository: ProductRepository): ViewModel() {
 
     val favorites = repository.products
 
-    private val _similarProducts = MutableLiveData<List<ProductsModelItem>>()
-    val similarProducts: LiveData<List<ProductsModelItem>> get() = _similarProducts
-
     private val _isFavorite = MutableLiveData<Boolean>()
     val isFavorite: LiveData<Boolean> get() = _isFavorite
 
@@ -34,10 +31,6 @@ class DetailViewModel(private val repository: ProductRepository): ViewModel() {
                 _isFavorite.value = true
             }
         }
-    }
-
-    fun fetchSimilarProducts(category: String, allProducts: Map<String, List<ProductsModelItem>>){
-        _similarProducts.value = allProducts[category]?.take(4) ?: emptyList()
     }
 
     fun insertProduct(product : ProductsModelItem){

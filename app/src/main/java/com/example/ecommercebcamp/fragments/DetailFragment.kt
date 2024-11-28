@@ -69,6 +69,7 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         product = arguments?.getParcelable<ProductsModelItem>(PRODUCT_ID)
+        detailViewModel.checkFavorite(product?.id.toString())
 
         product?.let { selectedProduct ->
             bindProductDetails(selectedProduct)
