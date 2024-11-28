@@ -169,11 +169,13 @@ class HomeFragment : Fragment() {
     }
 
     private fun onCategorySelected(category: String) {
-        homeViewModel.fetchProductsByCategory(category)
-//        homeViewModel.productsByCategory.value?.let { groupedProducts ->
-//            productAdapter.setProducts(groupedProducts[category] ?: emptyList())
-//        }
+        if (category.isEmpty()) {
+            homeViewModel.fetchAllProducts()
+        } else {
+            homeViewModel.fetchProductsByCategory(category)
+        }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

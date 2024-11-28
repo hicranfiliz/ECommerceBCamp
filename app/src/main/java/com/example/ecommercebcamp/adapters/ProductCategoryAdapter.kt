@@ -35,15 +35,19 @@ class ProductCategoryAdapter(
         holder.bind(category, position == selectedPosition)
 
         holder.binding.root.setOnClickListener {
-            if (selectedPosition == position) return@setOnClickListener
-
-            val previousPosition = selectedPosition
-            selectedPosition = position
-
-            notifyItemChanged(previousPosition)
-            notifyItemChanged(selectedPosition)
-
-            onCategoryClick(category)
+            if (selectedPosition == position) {
+                val previousPosition = selectedPosition
+                selectedPosition = -1
+                notifyItemChanged(previousPosition)
+                onCategoryClick("")
+            } else {
+                val previousPosition = selectedPosition
+                selectedPosition = position
+                notifyItemChanged(previousPosition)
+                notifyItemChanged(selectedPosition)
+                onCategoryClick(category)
+            }
         }
     }
+
 }
