@@ -25,8 +25,11 @@ class FavoriteProductsAdapter(
         }
     }
 
-    val differ = AsyncListDiffer(this, diffUtil)
+    fun getFavoriteCount(): Int {
+        return differ.currentList.size
+    }
 
+    val differ = AsyncListDiffer(this, diffUtil)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteProductsViewHolder {
         return FavoriteProductsViewHolder(ItemLayoutProductBinding.inflate(LayoutInflater.from(parent.context), parent, false), onProductClick)

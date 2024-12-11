@@ -1,5 +1,6 @@
 package com.example.ecommercebcamp.retrofit
 
+import com.example.ecommercebcamp.BuildConfig
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -10,7 +11,6 @@ import java.util.concurrent.TimeUnit
 class RetrofitInstance {
 
     companion object{
-        val BASE_URL = "https://run.mocky.io/v3/"
 
         val interceptor = HttpLoggingInterceptor().apply {
             this.level = HttpLoggingInterceptor.Level.BODY
@@ -25,7 +25,7 @@ class RetrofitInstance {
 
         fun getRetrofitInstance(): Retrofit {
             return Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(BuildConfig.BASE_URL)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
                 .build()

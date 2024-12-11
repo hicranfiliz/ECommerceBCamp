@@ -22,19 +22,43 @@
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/_8sdp"
             android:paddingEnd="@dimen/_8sdp"
-            android:text="Hi, Hicran"
+            android:text="@string/hi_str"
             style="@style/TextStyle"
             app:layout_constraintStart_toEndOf="@id/img_user"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/img_fav"
-            style="@style/IconStyle"
-            android:src="@drawable/heart"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_fav"
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="@dimen/_35sdp"
             app:layout_constraintEnd_toStartOf="@id/img_search"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/img_fav"
+                style="@style/IconStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/heart"
+                android:padding="@dimen/_6sdp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_fav_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/badge_bg"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="@string/_0"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12sdp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_search"
@@ -68,7 +92,7 @@
                 android:background="@drawable/badge_bg"
                 android:padding="0dp"
                 android:gravity="center"
-                android:text="0"
+                android:text="@string/_0"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_12sdp"
                 android:textStyle="bold"

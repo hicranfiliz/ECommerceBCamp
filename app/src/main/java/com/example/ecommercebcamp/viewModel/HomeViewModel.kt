@@ -5,8 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bumptech.glide.Glide.init
 import com.example.ecommercebcamp.model.ProductsModelItem
 import com.example.ecommercebcamp.retrofit.ProductRepository
+import com.example.ecommercebcamp.utils.Category
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -63,7 +65,7 @@ class HomeViewModel(
         }
     }
 
-    fun fetchProductsByCategory(category: String) {
+    fun fetchProductsByCategory(category: Category) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
@@ -85,5 +87,4 @@ class HomeViewModel(
         } ?: emptyList()
         _filteredProducts.value = filteredList
     }
-
 }

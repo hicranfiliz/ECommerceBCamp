@@ -3,11 +3,13 @@ package com.example.ecommercebcamp.fragments
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -15,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ecommercebcamp.R
+import com.example.ecommercebcamp.adapters.FavoriteProductsAdapter
 import com.example.ecommercebcamp.adapters.ProductAdapter
 import com.example.ecommercebcamp.adapters.ProductCategoryAdapter
 import com.example.ecommercebcamp.databinding.FragmentHomeBinding
@@ -23,6 +26,7 @@ import com.example.ecommercebcamp.model.ProductsModelItem
 import com.example.ecommercebcamp.retrofit.ProductRepository
 import com.example.ecommercebcamp.retrofit.ProductService
 import com.example.ecommercebcamp.retrofit.RetrofitInstance
+import com.example.ecommercebcamp.utils.Category
 import com.example.ecommercebcamp.viewModel.DetailViewModel
 import com.example.ecommercebcamp.viewModel.DetailViewModelFactory
 import com.example.ecommercebcamp.viewModel.HomeViewModel
@@ -37,6 +41,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var productCategoryAdapter: ProductCategoryAdapter
     private lateinit var productAdapter: ProductAdapter
+    private lateinit var favoritesAdapter: FavoriteProductsAdapter
 
     companion object {
         const val PRODUCT_ID = "com.example.easyfooddemo.fragments.id"
@@ -53,6 +58,7 @@ class HomeFragment : Fragment() {
             onCategorySelected(category)
         }
         productAdapter = ProductAdapter()
+        favoritesAdapter = FavoriteProductsAdapter()
     }
 
     override fun onCreateView(
@@ -72,6 +78,7 @@ class HomeFragment : Fragment() {
         setUpSearchAction()
         showCategoryItemsRV()
         showProductItemsRV()
+        setUpFavIconCount()
 
         homeViewModel.fetchCategories()
         homeViewModel.fetchAllProducts()
@@ -81,6 +88,18 @@ class HomeFragment : Fragment() {
         observeProduct()
         observeFilteredProducts()
         onProductClick()
+    }
+
+    private fun setUpFavIconCount() {
+        val favoriteCount = favoritesAdapter.getFavoriteCount()
+        val badgeTextView = binding.customToolbarr.tvFavBadge
+
+        if (favoriteCount > 0){
+            badgeTextView.text = favoriteCount.toString()
+            badgeTextView.visibility = View.VISIBLE
+        } else{
+            badgeTextView.visibility = View.GONE
+        }
     }
 
     private fun setUpToolbarInfo() {
@@ -172,10 +191,14 @@ class HomeFragment : Fragment() {
         if (category.isEmpty()) {
             homeViewModel.fetchAllProducts()
         } else {
-            homeViewModel.fetchProductsByCategory(category)
+            try {
+                val selectedCategory = Category.fromValue(category)
+                homeViewModel.fetchProductsByCategory(selectedCategory)
+            } catch (e: IllegalArgumentException){
+                Log.e("","")
+            }
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

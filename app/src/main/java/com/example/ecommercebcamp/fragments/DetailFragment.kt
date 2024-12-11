@@ -23,6 +23,7 @@ import com.example.ecommercebcamp.fragments.HomeFragment.Companion.SIMILAR_PRODU
 import com.example.ecommercebcamp.model.ProductsModelItem
 import com.example.ecommercebcamp.retrofit.ProductService
 import com.example.ecommercebcamp.retrofit.RetrofitInstance
+import com.example.ecommercebcamp.utils.Category
 import com.example.ecommercebcamp.viewModel.DetailViewModel
 import com.example.ecommercebcamp.viewModel.DetailViewModelFactory
 import com.example.ecommercebcamp.viewModel.HomeViewModel
@@ -74,8 +75,14 @@ class DetailFragment : Fragment() {
         product?.let { selectedProduct ->
             bindProductDetails(selectedProduct)
 
-            selectedProduct.category?.let { category ->
-                homeViewModel.fetchProductsByCategory(category)
+            selectedProduct.category?.let { categoryStr ->
+                try {
+                    val category = Category.fromValue(categoryStr)
+                    homeViewModel.fetchProductsByCategory(category)
+                }catch (e: IllegalArgumentException){
+                    Log.e("", "")
+                }
+
             }
         }
 

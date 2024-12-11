@@ -1,38 +1,24 @@
 package com.example.ecommercebcamp.retrofit
 
 import com.example.ecommercebcamp.model.ProductsModelItem
-class ProductRepository(private val productService: ProductService) {
+import com.example.ecommercebcamp.utils.Category
+
+class ProductRepository(private val productService: ProductService) : BaseRepository() {
 
     suspend fun getCategories(): List<String> {
-        val response = productService.getCategories()
-        if (response.isSuccessful) {
-            return response.body() ?: emptyList()
-        } else {
-            throw Exception("Failed to fetch categories: ${response.errorBody()?.string()}")
-        }
+        return apiCall { productService.getCategories() }
     }
 
     suspend fun getAllProducts(): List<ProductsModelItem> {
-        val response = productService.getAllProducts()
-        if (response.isSuccessful) {
-            return response.body() ?: emptyList()
-        } else {
-            throw Exception("Failed to fetch products: ${response.errorBody()?.string()}")
-        }
+        return apiCall { productService.getAllProducts() }
     }
 
-    suspend fun getProductsByCategory(category: String): List<ProductsModelItem> {
-        val response = when (category) {
-            "jewelery" -> productService.getJeweleries()
-            "men's clothing" -> productService.getMensClothings()
-            "electronics" -> productService.getElectronics()
-            "women's clothing" -> productService.getWomensClothings()
-            else -> throw IllegalArgumentException("Unknown category: $category")
-        }
-        if (response.isSuccessful) {
-            return response.body() ?: emptyList()
-        } else {
-            throw Exception("Failed to fetch products by category: ${response.errorBody()?.string()}")
+    suspend fun getProductsByCategory(category: Category): List<ProductsModelItem> {
+        return when (category) {
+            Category.JEWELERY -> apiCall { productService.getJeweleries() }
+            Category.MENS_CLOTHING -> apiCall { productService.getMensClothings() }
+            Category.ELECTRONICS -> apiCall { productService.getElectronics() }
+            Category.WOMENS_CLOTHING -> apiCall { productService.getWomensClothings() }
         }
     }
 }
