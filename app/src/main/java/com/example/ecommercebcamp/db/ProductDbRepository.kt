@@ -2,7 +2,7 @@ package com.example.ecommercebcamp.db
 
 import com.example.ecommercebcamp.model.ProductsModelItem
 
-class ProductRepository(private val dao: ProductDao) {
+class ProductDbRepository(private val dao: ProductDao) {
 
     val products = dao.getAll()
 

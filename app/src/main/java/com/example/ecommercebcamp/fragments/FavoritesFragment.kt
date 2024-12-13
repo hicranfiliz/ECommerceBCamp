@@ -15,7 +15,7 @@ import com.example.ecommercebcamp.R
 import com.example.ecommercebcamp.adapters.FavoriteProductsAdapter
 import com.example.ecommercebcamp.databinding.FragmentFavoritesBinding
 import com.example.ecommercebcamp.db.ProductDatabase
-import com.example.ecommercebcamp.db.ProductRepository
+import com.example.ecommercebcamp.db.ProductDbRepository
 import com.example.ecommercebcamp.fragments.HomeFragment.Companion.PRODUCT_ID
 import com.example.ecommercebcamp.viewModel.DetailViewModel
 import com.example.ecommercebcamp.viewModel.DetailViewModelFactory
@@ -32,7 +32,7 @@ class FavoritesFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val dao = ProductDatabase.getInstance(requireContext()).productDao
-        val repository = ProductRepository(dao)
+        val repository = ProductDbRepository(dao)
         val factory = DetailViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
         favoriteAdapter = FavoriteProductsAdapter()

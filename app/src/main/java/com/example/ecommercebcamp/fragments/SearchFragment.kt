@@ -14,6 +14,8 @@ import com.example.ecommercebcamp.R
 import com.example.ecommercebcamp.adapters.ProductAdapter
 import com.example.ecommercebcamp.adapters.ProductCategoryAdapter
 import com.example.ecommercebcamp.databinding.FragmentSearchBinding
+import com.example.ecommercebcamp.db.ProductDatabase
+import com.example.ecommercebcamp.db.ProductDbRepository
 import com.example.ecommercebcamp.fragments.HomeFragment.Companion.PRODUCT_ID
 import com.example.ecommercebcamp.retrofit.ProductRepository
 import com.example.ecommercebcamp.retrofit.ProductService
@@ -34,7 +36,9 @@ class SearchFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val repository = ProductRepository(RetrofitInstance.getRetrofitInstance().create(ProductService::class.java))
-        val factory = HomeViewModelFactory(repository)
+        val dao = ProductDatabase.getInstance(requireContext()).productDao
+        val favRepository = ProductDbRepository(dao)
+        val factory = HomeViewModelFactory(repository, favRepository)
         homeViewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
         productAdapter = ProductAdapter()
     }

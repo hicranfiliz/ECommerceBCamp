@@ -2,17 +2,20 @@ package com.example.ecommercebcamp.viewModel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide.init
+import com.example.ecommercebcamp.db.ProductDbRepository
 import com.example.ecommercebcamp.model.ProductsModelItem
 import com.example.ecommercebcamp.retrofit.ProductRepository
 import com.example.ecommercebcamp.utils.Category
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
+    private val favRepository: ProductDbRepository
 ) : ViewModel() {
 
     private val _categories = MutableLiveData<List<String>>()
@@ -30,10 +33,20 @@ class HomeViewModel(
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> get() = _errorMessage
 
+    val favorites = favRepository.products
+
+    private val _favoriteCount = MediatorLiveData<Int>()
+    val favoriteCount: LiveData<Int> get() = _favoriteCount
+
     init {
         fetchCategories()
         fetchAllProducts()
+
+        _favoriteCount.addSource(favorites) { favoriteList ->
+            _favoriteCount.value = favoriteList.size
+        }
     }
+
 
     fun fetchCategories() {
         viewModelScope.launch {

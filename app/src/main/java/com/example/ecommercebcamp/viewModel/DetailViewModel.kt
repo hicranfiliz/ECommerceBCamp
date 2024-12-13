@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ecommercebcamp.db.ProductRepository
+import com.example.ecommercebcamp.db.ProductDbRepository
 import com.example.ecommercebcamp.model.ProductsModelItem
 import kotlinx.coroutines.launch
 
-class DetailViewModel(private val repository: ProductRepository): ViewModel() {
+class DetailViewModel(private val repository: ProductDbRepository): ViewModel() {
 
     val favorites = repository.products
 

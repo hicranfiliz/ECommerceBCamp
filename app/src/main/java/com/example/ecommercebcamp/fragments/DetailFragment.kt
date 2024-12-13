@@ -6,9 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -17,9 +15,8 @@ import com.example.ecommercebcamp.R
 import com.example.ecommercebcamp.adapters.SimilarProductAdapter
 import com.example.ecommercebcamp.databinding.FragmentDetailBinding
 import com.example.ecommercebcamp.db.ProductDatabase
-import com.example.ecommercebcamp.db.ProductRepository
+import com.example.ecommercebcamp.db.ProductDbRepository
 import com.example.ecommercebcamp.fragments.HomeFragment.Companion.PRODUCT_ID
-import com.example.ecommercebcamp.fragments.HomeFragment.Companion.SIMILAR_PRODUCTS
 import com.example.ecommercebcamp.model.ProductsModelItem
 import com.example.ecommercebcamp.retrofit.ProductService
 import com.example.ecommercebcamp.retrofit.RetrofitInstance
@@ -45,14 +42,14 @@ class DetailFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val dao = ProductDatabase.getInstance(requireContext()).productDao
-        val repository = ProductRepository(dao)
+        val repository = ProductDbRepository(dao)
         val factory = DetailViewModelFactory(repository)
         detailViewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
 
         val serviceRepository = com.example.ecommercebcamp.retrofit.ProductRepository(
             RetrofitInstance.getRetrofitInstance().create(ProductService::class.java)
         )
-        val homeFactory = HomeViewModelFactory(serviceRepository)
+        val homeFactory = HomeViewModelFactory(serviceRepository, repository)
         homeViewModel = ViewModelProvider(this, homeFactory)[HomeViewModel::class.java]
         similarProductAdapter = SimilarProductAdapter()
     }

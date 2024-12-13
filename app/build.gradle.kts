@@ -1,8 +1,17 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("kotlin-kapt")
     id("kotlin-parcelize")
+}
+
+val keystoreProperties = Properties().apply {
+    val keyStoreFile = rootProject.file("keystore.properties")
+    if (keyStoreFile.exists()){
+        load(keyStoreFile.inputStream())
+    }
 }
 
 android {
@@ -17,7 +26,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        signingConfig = signingConfigs.getByName("debug")
 
         kapt{
             arguments {
@@ -26,12 +34,35 @@ android {
         }
     }
 
+    signingConfigs {
+        getByName("debug"){
+            //keyAlias = "debug"
+            //keyPassword = "android"
+            //storeFile = file("${System.getProperty("user.home")}/Documents/keystores/keystore1.jks")
+            //storePassword = "android"
+        }
+        create("release"){
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+            storeFile = file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
+        }
+    }
+
     buildTypes {
         debug {
+            signingConfig = signingConfigs.getByName("debug")
+            applicationIdSuffix = ".test"
+            versionNameSuffix = "_test"
+            resValue("string", "app_name", "ECommerceApp_Test")
             buildConfigField("String", "BASE_URL", "\"https://run.mocky.io/v3/\"")
         }
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
+            applicationIdSuffix =".prod"
+            versionNameSuffix = "_prod"
+            resValue("string", "app_name", "ECommerceApp_Prod")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -39,6 +70,7 @@ android {
             buildConfigField("String", "BASE_URL", "\"https://run.mocky.io/v3/\"")
         }
     }
+
     buildFeatures{
         viewBinding = true
         dataBinding = true
@@ -83,6 +115,8 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+
+    implementation(libs.androidx.lifecycle.livedata.ktx.v261)
 
     //lottie
     implementation(libs.lottie)

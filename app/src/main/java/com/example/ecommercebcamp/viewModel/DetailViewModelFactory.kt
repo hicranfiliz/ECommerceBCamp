@@ -2,9 +2,9 @@ package com.example.ecommercebcamp.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.ecommercebcamp.db.ProductRepository
+import com.example.ecommercebcamp.db.ProductDbRepository
 
-class DetailViewModelFactory(private val repository: ProductRepository): ViewModelProvider.Factory {
+class DetailViewModelFactory(private val repository: ProductDbRepository): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(DetailViewModel::class.java)){
             @Suppress("UNCHECKED_CAST")

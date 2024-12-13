@@ -22,11 +22,13 @@ import com.example.ecommercebcamp.adapters.ProductAdapter
 import com.example.ecommercebcamp.adapters.ProductCategoryAdapter
 import com.example.ecommercebcamp.databinding.FragmentHomeBinding
 import com.example.ecommercebcamp.db.ProductDatabase
+import com.example.ecommercebcamp.db.ProductDbRepository
 import com.example.ecommercebcamp.model.ProductsModelItem
 import com.example.ecommercebcamp.retrofit.ProductRepository
 import com.example.ecommercebcamp.retrofit.ProductService
 import com.example.ecommercebcamp.retrofit.RetrofitInstance
 import com.example.ecommercebcamp.utils.Category
+import com.example.ecommercebcamp.utils.Gender
 import com.example.ecommercebcamp.viewModel.DetailViewModel
 import com.example.ecommercebcamp.viewModel.DetailViewModelFactory
 import com.example.ecommercebcamp.viewModel.HomeViewModel
@@ -37,11 +39,16 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var homeViewModel: HomeViewModel
+    private val homeViewModel : HomeViewModel by viewModels {
+        val repository = ProductRepository(RetrofitInstance.getRetrofitInstance().create(ProductService::class.java))
+        val dao = ProductDatabase.getInstance(requireContext()).productDao
+        val favRepository = ProductDbRepository(dao)
+        HomeViewModelFactory(repository, favRepository)
+    }
 
-    private lateinit var productCategoryAdapter: ProductCategoryAdapter
-    private lateinit var productAdapter: ProductAdapter
-    private lateinit var favoritesAdapter: FavoriteProductsAdapter
+    private val productCategoryAdapter by lazy { ProductCategoryAdapter{category ->
+        onCategorySelected(category)} }
+    private val productAdapter by lazy { ProductAdapter() }
 
     companion object {
         const val PRODUCT_ID = "com.example.easyfooddemo.fragments.id"
@@ -50,15 +57,6 @@ class HomeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val repository = ProductRepository(RetrofitInstance.getRetrofitInstance().create(ProductService::class.java))
-        val factory = HomeViewModelFactory(repository)
-        homeViewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
-        productCategoryAdapter = ProductCategoryAdapter{ category ->
-            onCategorySelected(category)
-        }
-        productAdapter = ProductAdapter()
-        favoritesAdapter = FavoriteProductsAdapter()
     }
 
     override fun onCreateView(
@@ -91,14 +89,15 @@ class HomeFragment : Fragment() {
     }
 
     private fun setUpFavIconCount() {
-        val favoriteCount = favoritesAdapter.getFavoriteCount()
-        val badgeTextView = binding.customToolbarr.tvFavBadge
+        homeViewModel.favoriteCount.observe(viewLifecycleOwner){count ->
+            val badgetv = binding.customToolbarr.tvFavBadge
 
-        if (favoriteCount > 0){
-            badgeTextView.text = favoriteCount.toString()
-            badgeTextView.visibility = View.VISIBLE
-        } else{
-            badgeTextView.visibility = View.GONE
+            if (count > 0){
+                badgetv.text = count.toString()
+                badgetv.visibility = View.VISIBLE
+            } else{
+                badgetv.visibility = View.GONE
+            }
         }
     }
 
@@ -107,11 +106,21 @@ class HomeFragment : Fragment() {
         val userName = sharedPrefs.getString("userName", "Hicran")
         val userGender = sharedPrefs.getString("userGender", "other")
 
+        val userGenderEnum = try{
+            if (userGender != null) {
+                Gender.valueOf(userGender)
+            } else {
+                userGender == ""
+            }
+        } catch (e: IllegalArgumentException){
+            null
+        }
+
         binding.customToolbarr.tvUserName.text = "Hi, $userName"
 
-        val genderIcon = when (userGender){
-            "male" -> R.drawable.man_s
-            "female" -> R.drawable.woman_s
+        val genderIcon = when (userGenderEnum){
+            Gender.male -> R.drawable.man_s
+            Gender.female -> R.drawable.woman_s
             else -> R.drawable.user_s
         }
 
@@ -120,7 +129,8 @@ class HomeFragment : Fragment() {
 
     private fun setUpToolbarFavAction() {
         binding.customToolbarr.imgFav.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_favoritesFragment)
+            findNavController().navigate(
+                R.id.action_homeFragment_to_favoritesFragment)
         }
     }
 
@@ -132,7 +142,6 @@ class HomeFragment : Fragment() {
 
     private fun onProductClick() {
         productAdapter.onProductClick = {product ->
-
             val bundle = Bundle().apply {
                 putParcelable(PRODUCT_ID, product)
             }
