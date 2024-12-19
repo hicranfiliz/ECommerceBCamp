@@ -36,10 +36,10 @@ android {
 
     signingConfigs {
         getByName("debug"){
-            //keyAlias = "debug"
-            //keyPassword = "android"
-            //storeFile = file("${System.getProperty("user.home")}/Documents/keystores/keystore1.jks")
-            //storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+            storeFile = file("${System.getProperty("user.home")}/.android/debug.keystore")
+            storePassword = "android"
         }
         create("release"){
             keyAlias = keystoreProperties["keyAlias"] as String
